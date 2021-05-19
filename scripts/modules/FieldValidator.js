@@ -4,29 +4,35 @@ export default class FieldValidator {
 	
 	fieldBlockClass = ".field-block";
 	errorMsgElement;
+	hasError = false;
 
-	constructor(f, cb = null) {
+	constructor(f) {
 		this.field = f;
 		this.fieldBlock = this.field.closest(this.fieldBlockClass);
 		
-		this.init(cb = null);
+		this.init();
 	}
 
 	init = () => {
 		this.field.addEventListener('invalid', e => {
+			if(this.hasError)
+				this.cleanErrors();
 			this.throwError(e.target);
 		});
 	}
 
 	throwError = i => {
-		let
-			errMsg = this.getError(i), // Créer le message d'erreur
-			errNode = buildTextElement("small", errMsg);
+		this.hasError = true;
 
-		this.errorMsgNode = errNode;
-		
+		let
+			// Créer le message d'erreur
+			errMsg = this.getError(i), 
+			errElement = buildTextElement("small", errMsg);
+
+		this.errorMsgElement = errElement;
+
 		// Injecter le message d'erreur
-		this.fieldBlock.append(errNode);
+		this.fieldBlock.append(errElement);
 		
 		// Basculer la classe d'erreur
 		this.fieldBlock.classList.toggle("error");
@@ -43,15 +49,15 @@ export default class FieldValidator {
 			return `Le champ n'est pas du bon format`;
 
 		if(i.validity.rangeOverflow) 
-			return `Le nombre de joueur ne doit pas dépasser ${i.getAttribute("max")}`;
+			return `Le nombre de joueurs ne doit pas dépasser ${i.getAttribute("max")}`;
 
 		if(i.validity.rangeUnderflow) 
-			return `Le nombre de joueur ne doit pas être inférieur à ${i.getAttribute("min")}`;
+			return `Le nombre de joueurs ne doit pas être inférieur à ${i.getAttribute("min")}`;
 	}
 
 	cleanErrors = () => {
 		this.fieldBlock.classList.toggle("error");
-		
+		console.log(this.errorMsgElement);
 		if(this.errorMsgElement)
 			this.errorMsgElement.remove();
 	}

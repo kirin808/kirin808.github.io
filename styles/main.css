@@ -13,6 +13,10 @@
 	--radius: 4px;
 }
 
+* {
+	box-sizing: border-box;
+}
+
 body {
 	padding: var(--gutter);
 
@@ -25,28 +29,42 @@ body {
 }
 
 main {
-	
+	/* max-width: max-content; */
+
+	margin-right: auto;
+	margin-left: auto;
+}
+
+button, input {
+	font-size: inherit;
+	font-family: inherit;
 }
 
 button {
 	cursor: pointer;
 	
 	padding: 8px 24px;
+	border: none;
+	border-radius: var(--radius);
+
 	background-color: var(--primary-color);
 	
-	font-size: inherit;
 	color: var(--grey-light);
+}
+
+button:disabled {
+	cursor: initial;
+	opacity: 0.5;
 }
 
 input {
 	display: block;
 
+	width: 4ch;
 	border: 0;
 	border-bottom: 2px solid currentColor;
 
 	background-color: transparent;
-
-	font-size: inherit;
 }
 
 .grid-players {
@@ -57,7 +75,14 @@ input {
 
 .player-panel {
 	position: relative;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: var(--gutter);
+
 	padding: var(--gutter);
+	border-radius: var(--radius);
 
 	opacity: 0.5;
 
@@ -67,15 +92,23 @@ input {
 	transition-duration: 100ms;
 }
 
+.player-panel .actions-block {
+	display: flex;
+	justify-content: space-between;
+	gap: var(--gutter-deci);
+}
+
 .player-panel .player-status {
 	position: absolute;
-	top: 20px;
+	top: -8px;
 	right: 20px;
 
 	display: block;
 
 	padding: var(--gutter-deci);
 	border-radius: var(--radius);
+
+	box-shadow: var(--shadow);
 
 	font-size: smaller;
 }
@@ -85,13 +118,30 @@ input {
 	opacity: 1;
 }
 
+.player-status {
+	color: var(--grey-light);
+}
 
+.winner {
+	background-color: hsl(220, 20%, 80%);
+}
+
+.winner .player-status {
+	background-color: hsl(220, 30%, 30%);
+}
 
 .busted {
-	background-color: antiquewhite;
+	background-color: hsl(20, 20%, 80%);
 }
 
 .busted .player-status {
-	background-color: brown;
-	color: var(--grey-light);
+	background-color: hsl(10, 50%, 50%);
+}
+
+.stopped {
+	background-color: hsl(60, 20%, 80%);
+}
+
+.stopped .player-status {
+	background-color: hsl(60, 30%, 40%);
 }

@@ -7,7 +7,7 @@ export default class GameController {
 		this.deck = deckObj;
 
 		this.initPlayers(playerCount, PlayerClass);
-		this.board.drawInitialBoard(this.players);
+		this.board.drawInitialBoard(this.players, this.getPlayedGames());
 
 		this.initPlayersButtons();
 		
@@ -40,6 +40,27 @@ export default class GameController {
 				this.stopPlayer(player);
 			});
 		}
+	}
+
+	updatePlayedGames = () => {
+		if(sessionStorage.getItem("playCount")) {
+			const count = +(sessionStorage.getItem("playCount")) + 1;
+			sessionStorage.setItem("playCount", count);
+		} else {
+			sessionStorage.setItem("playCount", 1);
+		}
+	}
+
+	getPlayedGames = () => {
+		let count;
+
+		if(sessionStorage.getItem("playCount")) {
+			count = sessionStorage.getItem("playCount");
+		} else {
+			count = 0
+		}
+
+		return count;
 	}
 
 	startGame = () => {
@@ -121,12 +142,15 @@ export default class GameController {
 	getWinners = () => {
 		// Créer un tableau du / des meilleur.s joueur.s
 		return this.getStoppedPlayers().reduce((a, p, i) => {
+			console.log(p.score);
 			if(i === 0) {
+				console.log("test");
 				a.push(p);
 				return a;
 			}
 
 			if(p.score > a[0].score) {
+				a = [];
 				a[0] = p;
 			} else if(p.score === a[0].score) {
 				a.push(p);
@@ -141,5 +165,7 @@ export default class GameController {
 		for(const winner of winners) {
 			this.board.drawWinner(winner);
 		}
+
+		this.updatePlayedGames();
 	}
 }

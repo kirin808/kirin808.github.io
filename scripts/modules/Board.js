@@ -16,11 +16,11 @@ export default class Board {
 	 * 
 	 * @param {Array} players Tableau d'objets Player permettant d'initialiser / dessiner la table initial
 	 */
-	drawInitialBoard = (players) => {
+	drawInitialBoard = (players, played) => {
 		cleanElement(this.boardNode);
 
 		this.drawAllPlayers(players);
-
+		this.drawGamesPlayedPanel(played);
 	}
 
 	drawAllPlayers = (p) => {
@@ -72,7 +72,7 @@ export default class Board {
 			
 			btnHitMe = buildButton(
 				"button",
-				"Jouer, pardis !",
+				"Jouer, pardis\u00A0!",
 				{
 					disabled : true,
 					"aria-label" : "Jouer"
@@ -81,7 +81,7 @@ export default class Board {
 			
 			btnStopMe = buildButton(
 				"button",
-				"Arrêtez-moé !",
+				"Arrêtez-moé\u00A0!",
 				{
 					disabled : true,
 					"aria-label" : "Arrêter"
@@ -91,6 +91,12 @@ export default class Board {
 		actionsBlock.append(btnHitMe, btnStopMe);
 
 		return actionsBlock;
+	}
+
+	drawGamesPlayedPanel = (played) => {
+		this.boardNode.append(
+			buildTextElement("span", `Parties jouées : ${played}`, "played-count")
+		)
 	}
 
 	enablePlayer = (p) => {
@@ -154,13 +160,23 @@ export default class Board {
 	}
 
 	drawStopped = (p) => {
-		p.panelElement.classList.add("stopped");
+		const panel = p.panelElement;
+		
+		panel.classList.add("stopped");
+		panel.append(
+			buildTextElement("span", "Arrêté", "player-status")
+		);
 	}
 
 	drawWinner = (p) => {
 		const panel = p.panelElement;
 		
 		panel.classList.remove("stopped");
+		panel.querySelector('.player-status').remove();
+
 		panel.classList.add("winner");
+		panel.append(
+			buildTextElement("span", "Gagnant !", "player-status")
+		);
 	}
 }
