@@ -1,3 +1,97 @@
+:root {
+	--gutter-deca: calc(var(--gutter) * 1.25);
+	--gutter: 1rem;
+	--gutter-deci: calc(var(--gutter) * 0.8);
+
+	--primary-color: hsl(220, 50%, 20%);
+	--grey-light: hsl(0, 0%, 93%);;
+
+	--shadow:
+		0px 1px 2px 0px hsla(0, 0%, 0%, 0.2),
+		0px 0px 2px 0px hsla(0, 0%, 0%, 0.1);
+
+	--radius: 4px;
+}
+
+body {
+	padding: var(--gutter);
+
+	background-color: var(--grey-light);
+	font-size: x-large;
+}
+
+.flow-content > * + * {
+	margin-top: var(--gutter-deca);
+}
+
+main {
+	
+}
+
+button {
+	cursor: pointer;
+	
+	padding: 8px 24px;
+	background-color: var(--primary-color);
+	
+	font-size: inherit;
+	color: var(--grey-light);
+}
+
+input {
+	display: block;
+
+	border: 0;
+	border-bottom: 2px solid currentColor;
+
+	background-color: transparent;
+
+	font-size: inherit;
+}
+
+.grid-players {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+	gap: var(--gutter-deca);
+}
+
+.player-panel {
+	position: relative;
+	padding: var(--gutter);
+
+	opacity: 0.5;
+
+	box-shadow: var(--shadow);
+
+	transition-property: opacity;
+	transition-duration: 100ms;
+}
+
+.player-panel .player-status {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+
+	display: block;
+
+	padding: var(--gutter-deci);
+	border-radius: var(--radius);
+
+	font-size: smaller;
+}
+
+[aria-current="player"],
+.winner {
+	opacity: 1;
+}
+
+
+
 .busted {
 	background-color: antiquewhite;
+}
+
+.busted .player-status {
+	background-color: brown;
+	color: var(--grey-light);
 }

@@ -21,7 +21,7 @@ export default class FieldValidator {
 	throwError = i => {
 		let
 			errMsg = this.getError(i), // Créer le message d'erreur
-			errNode = buildTextNode("small", errMsg);
+			errNode = buildTextElement("small", errMsg);
 
 		this.errorMsgNode = errNode;
 		
@@ -52,7 +52,7 @@ export default class FieldValidator {
 	cleanErrors = () => {
 		this.fieldBlock.classList.toggle("error");
 		
-		if(this.errorMsgNode)
-			this.errorMsgNode.remove();
+		if(this.errorMsgElement)
+			this.errorMsgElement.remove();
 	}
 }

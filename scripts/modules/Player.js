@@ -3,7 +3,7 @@ export default class Player {
 	id;
 	score = 0;
 	hand = [];
-	isStoppped = false;
+	isStopped = false;
 	isBusted = false;
 	panelElement;
 

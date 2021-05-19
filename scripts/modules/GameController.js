@@ -35,6 +35,10 @@ export default class GameController {
 			btnHitMe.addEventListener('click', (e) => {
 				this.hitPlayer(player);
 			});
+
+			btnStopMe.addEventListener('click', (e) => {
+				this.stopPlayer(player);
+			});
 		}
 	}
 
@@ -49,27 +53,31 @@ export default class GameController {
 		this.moveToNext(p);
 	}
 
+	stopPlayer = (p) => {
+		p.isStopped = true;
+		
+		this.board.drawStopped(p);
+		this.moveToNext(p);
+	}
+
 	updatePlayer = (p) => {
-		this.board.updateScore(p);
+		this.board.updateScoreUI(p);
+		this.board.updateHandUI(p);
 				
 		if(p.isBusted) {
 			this.board.drawBusted(p);
 		}
-
-		if(p.isStopped) {
-			this.board.drawStopped(p);
-		}
-
-		this.board.disablePlayer(p);
 	}
 
 	moveToNext = (p) => {
-		// Si il reste des joueurs actifs, passé au suivant, sinon, terminer la partie
-		const nextPlayer = this.getNextPlayer(p);
+		// Désactivé le joueur courant
+		this.board.disablePlayer(p);
 		
-		if(nextPlayer) {
-			this.currentPlayer = nextPlayer
-			this.board.enablePlayer(nextPlayer)
+		// Si il reste des joueurs actifs, passé au suivant, sinon, terminer la partie		
+		if(this.hasActivePlayers()) {
+			this.currentPlayer = this.getNextPlayer(p);
+			
+			this.board.enablePlayer(this.currentPlayer);
 		} else {
 			this.endGame();
 		}
@@ -82,34 +90,56 @@ export default class GameController {
 	getNextPlayer = (p) => {
 		let
 			index = p.id,
-			next;
-
-		if(this.currentPlayer === p && this.currentPlayer.isActive()) {
-
-		}
-		if(index < this.players.length - 1) {
-			next = ++index;
-		} else  {
-			return p;
-		} else {
-			next = 0;
-		}
-
+			next = (index < this.players.length - 1) ? ++index : 0;
+		
 		const nextPlayer = this.players[next];
 		
 		if(nextPlayer.isActive()) {
 			return nextPlayer;
 		}
-
-		if(this.currentPlayer === nextPlayer && !this.currentPlayer.isActive()) {
-			console.log(this.currentPlayer);
-			return false;
-		}
 		
-		this.getNextPlayer(next);
+		// S'il ne reste qu'un joueur et qu'il est actif, le retourner
+		if(this.getActivePlayers().length === 1 && this.currentPlayer.isActive()) {
+			return p;
+		}
+
+		return this.getNextPlayer(nextPlayer);
 	}
 
+	hasActivePlayers = () => {
+		return this.players.filter(p => !p.isBusted && !p.isStopped).length > 0;
+	}
+
+	getActivePlayers = () => {
+		return this.players.filter(p => !p.isBusted && !p.isStopped);
+	}
+
+	getStoppedPlayers = () => {
+		return this.players.filter(p => p.isStopped);
+	}
+
+	getWinners = () => {
+		// Créer un tableau du / des meilleur.s joueur.s
+		return this.getStoppedPlayers().reduce((a, p, i) => {
+			if(i === 0) {
+				a.push(p);
+				return a;
+			}
+
+			if(p.score > a[0].score) {
+				a[0] = p;
+			} else if(p.score === a[0].score) {
+				a.push(p);
+			}
+
+			return a;
+		}, [])
+	}
 	endGame = () => {
-		console.log("Partie terminée");
+		const winners = this.getWinners();
+
+		for(const winner of winners) {
+			this.board.drawWinner(winner);
+		}
 	}
 }

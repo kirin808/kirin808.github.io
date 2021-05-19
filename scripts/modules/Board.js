@@ -37,12 +37,13 @@ export default class Board {
 		const
 			panel = buildElement("div", "player-panel"),
 			scoreBlock = this.buildScorePanel(p.score),
-			actionsBlock = this.buildActionsPanel();
+			actionsBlock = this.buildActionsPanel(),
+			handBlock = this.buildHandPanel();
 		
 		// Référencer la panneau du joueur à son objet pour facilement lui accéder.
 		p.setPanelElement(panel);
 
-		panel.append(scoreBlock, actionsBlock);
+		panel.append(scoreBlock, handBlock, actionsBlock);
 
 		return panel;
 	}
@@ -56,6 +57,13 @@ export default class Board {
 		scoreBlock.append(scoreLabel, score);
 
 		return scoreBlock
+	}
+
+	buildHandPanel = () => {
+		const
+			handBlock = buildElement("ul", "player-hand");
+
+		return handBlock;
 	}
 
 	buildActionsPanel = () => {
@@ -111,7 +119,7 @@ export default class Board {
 		}
 	}
 
-	updateScore = (p) => {
+	updateScoreUI = (p) => {
 		const
 			panel = p.panelElement,
 			score = panel.querySelector('.score-display');
@@ -119,11 +127,40 @@ export default class Board {
 		score.textContent = p.score;
 	}
 
+	updateHandUI = (p) => {
+		const
+			panel = p.panelElement,
+			hand = panel.querySelector('.player-hand'),
+			frag = document.createDocumentFragment();
+		
+		cleanElement(hand);
+
+		for(const card of p.hand) {
+			frag.append(
+				buildTextElement("li", `${card.value} de ${card.suit}`)
+			)
+		}
+
+		hand.append(frag);
+	}
+
 	drawBusted = (p) => {
-		p.panelElement.classList.add("busted");
+		const panel = p.panelElement;
+		
+		panel.classList.add("busted");
+		panel.append(
+			buildTextElement("span", "Explosé !", "player-status")
+		);
 	}
 
 	drawStopped = (p) => {
 		p.panelElement.classList.add("stopped");
+	}
+
+	drawWinner = (p) => {
+		const panel = p.panelElement;
+		
+		panel.classList.remove("stopped");
+		panel.classList.add("winner");
 	}
 }
