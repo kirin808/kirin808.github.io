@@ -142,9 +142,7 @@ export default class GameController {
 	getWinners = () => {
 		// Créer un tableau du / des meilleur.s joueur.s
 		return this.getStoppedPlayers().reduce((a, p, i) => {
-			console.log(p.score);
 			if(i === 0) {
-				console.log("test");
 				a.push(p);
 				return a;
 			}
@@ -167,5 +165,6 @@ export default class GameController {
 		}
 
 		this.updatePlayedGames();
+		this.board.drawPlayAgain();
 	}
 }

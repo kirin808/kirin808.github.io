@@ -57,7 +57,7 @@ export default class FieldValidator {
 
 	cleanErrors = () => {
 		this.fieldBlock.classList.toggle("error");
-		console.log(this.errorMsgElement);
+		
 		if(this.errorMsgElement)
 			this.errorMsgElement.remove();
 	}

@@ -43,7 +43,7 @@ button, input {
 button {
 	cursor: pointer;
 	
-	padding: 8px 24px;
+	padding: var(--gutter-deci) var(--gutter-deca);
 	border: none;
 	border-radius: var(--radius);
 
@@ -144,4 +144,15 @@ input {
 
 .stopped .player-status {
 	background-color: hsl(60, 30%, 40%);
+}
+
+.played-count {
+	display: block;
+	
+	max-width: max-content;
+	padding: var(--gutter-deci) var(--gutter-deca);
+	border-radius: var(--radius);
+
+	background-color: hsl(100, 30%, 40%);
+	color: var(--grey-light);
 }

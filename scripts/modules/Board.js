@@ -1,4 +1,5 @@
 import { buildTextElement, buildElement, buildButton, cleanElement } from "./DOMBuilder.js";
+import { appendAfter } from "./DOMInjector.js";
 
 export default class Board {
 	boardNode = document.querySelector('.board');
@@ -94,8 +95,11 @@ export default class Board {
 	}
 
 	drawGamesPlayedPanel = (played) => {
-		this.boardNode.append(
-			buildTextElement("span", `Parties jouées : ${played}`, "played-count")
+		const title = document.querySelector('h1');
+		
+		appendAfter(
+			buildTextElement("span", `Parties jouées : ${played}`, "played-count"),
+			title
 		)
 	}
 
@@ -178,5 +182,25 @@ export default class Board {
 		panel.append(
 			buildTextElement("span", "Gagnant !", "player-status")
 		);
+	}
+
+	buildPlayAgainPanel = () => {
+		const
+			e = buildElement("div", "play-again"),
+			b = buildButton("button", "Jouer à nouveau");
+
+			b.addEventListener("click", (e) => {
+				location.reload();
+			})
+
+		e.append(b);
+
+		return e;
+	}
+
+	drawPlayAgain = () => {
+		this.boardNode.append(
+			this.buildPlayAgainPanel()
+		)
 	}
 }
